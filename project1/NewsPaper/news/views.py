@@ -1,5 +1,5 @@
 # Create your views here.
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView)
 from .models import Posts
 from .filters import PostsFilter
@@ -32,7 +32,8 @@ class PostDetail(DetailView):
     template_name = 'post.html'
     context_object_name = 'post'
 
-class PostsCreate(LoginRequiredMixin, CreateView):
+class PostsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_posts',)
     raise_exception = True
     form_class = PostsForm
     model = Posts
@@ -43,13 +44,15 @@ class PostsCreate(LoginRequiredMixin, CreateView):
         post.item='news'
         return super().form_valid(form)
 
-class PostsUpdate(LoginRequiredMixin, UpdateView):
+class PostsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_posts',)
     raise_exception = True
     form_class = PostsForm
     model = Posts
     template_name = 'post_edit.html'
 
-class PostsDelete(LoginRequiredMixin, DeleteView):
+class PostsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_posts',)
     raise_exception = True
     model = Posts
     template_name = 'posts_delete.html'
@@ -75,7 +78,8 @@ class PostsSearch(ListView):
         context['filterset'] = self.filterset
         return context
 
-class ArticleCreate(LoginRequiredMixin, CreateView):
+class ArticleCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_article',)
     raise_exception = True
     form_class = PostsForm
     model = Posts
@@ -86,13 +90,15 @@ class ArticleCreate(LoginRequiredMixin, CreateView):
         post.item='article'
         return super().form_valid(form)
 
-class ArticleUpdate(LoginRequiredMixin, UpdateView):
+class ArticleUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_article',)
     raise_exception = True
     form_class = PostsForm
     model = Posts
     template_name = 'article_edit.html'
 
-class ArticleDelete(LoginRequiredMixin, DeleteView):
+class ArticleDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_article',)
     raise_exception = True
     model = Posts
     template_name = 'article_delete.html'

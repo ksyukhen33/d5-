@@ -11,6 +11,14 @@ Posts
 {% block content %}
    <h1>Все новости</h1>
    <h3>{% current_time '%b %d %Y' %}</h3>
+   <form action="" method="get">
+       {{ filterset.form.as_p }}
+       <input type="submit" value="Найти" />
+   </form>
+   <hr>
+   {% if perms.simpleapp.add_product %}
+   <a href="{% url 'product_create' %}">Добавить товар</a>
+   {% endif %}
 
 {% if posts %}
 <table>
@@ -20,6 +28,7 @@ Posts
         <td>Содержание</td>
         <td>Тип публикации</td>
         <td>Категория</td>
+        {% if perms.simpleapp.change_product or perms.simpleapp.delete_product %}
     </tr>
         {% for post in posts %}
     <tr>
@@ -29,6 +38,11 @@ Posts
         <td>{{ post.get_get_content_type_display }}</td>
         {% for cat in post.postCategory.all %}
         <td>{{ cat.name_category }}</td>
+            {% if perms.simpleapp.change_product %}
+            <a href="{% url 'product_update' pk=product.id %}">Изменить</a>
+            {% endif %}
+            {% if perms.simpleapp.delete_product %}
+            <a href="{% url 'product_delete' product.id %}">Удалить</a>
         {% endfor %}
     </tr>
         {% endfor %}
